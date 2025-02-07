@@ -1,4 +1,4 @@
-export default function Workout() {
+export default function addWorkout() {
     return (
         <main>
             Workout
