@@ -13,22 +13,26 @@ export default function SignIn() {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <input 
-                type="email" 
-                value={email} 
-                onChange={(e) => setEmail(e.target.value)} 
-                placeholder="Email" 
-                required 
-            />
-            <input 
-                type="password" 
-                value={password} 
-                onChange={(e) => setPassword(e.target.value)} 
-                placeholder="Password" 
-                required 
-            />
-            <button type="submit">Sign In</button>
-        </form>
+        <main className="w-full h-screen flex">
+            <form onSubmit={handleSubmit} className="flex-grow flex flex-col gap-5 justify-center items-center px-10">
+                <input 
+                    type="email" 
+                    value={email} 
+                    onChange={(e) => setEmail(e.target.value)} 
+                    placeholder="Email" 
+                    className="w-full h-10 rounded-md text-black px-3"
+                    required 
+                />
+                <input 
+                    type="password" 
+                    value={password} 
+                    onChange={(e) => setPassword(e.target.value)} 
+                    placeholder="Password" 
+                    className="w-full h-10 rounded-md text-black px-3"
+                    required
+                />
+                <button type="submit">Sign In</button>
+            </form>
+        </main>
     );
 }
