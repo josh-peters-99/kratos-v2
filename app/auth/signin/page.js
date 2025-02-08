@@ -2,6 +2,7 @@
 
 import { signIn } from "next-auth/react";
 import { useState } from "react";
+import Link from "next/link";
 
 export default function SignIn() {
     const [email, setEmail] = useState("");
@@ -13,8 +14,8 @@ export default function SignIn() {
     };
 
     return (
-        <main className="w-full h-screen flex">
-            <form onSubmit={handleSubmit} className="flex-grow flex flex-col gap-5 justify-center items-center px-10">
+        <section className="w-full flex flex-col h-[800px] justify-center items-center px-10 bg-white">
+            <form onSubmit={handleSubmit} className="flex flex-col justify-between items-center w-full gap-8">
                 <input 
                     type="email" 
                     value={email} 
@@ -29,8 +30,9 @@ export default function SignIn() {
                     placeholder="Password" 
                     required
                 />
-                <button type="submit">Sign In</button>
+                <p>Don't have an account? <Link href="/auth/signup" className="underline underline-offset-1">Sign Up</Link></p>
+                <button type="submit" className="w-full bg-red text-white px-6 py-3 rounded-full">Sign In</button>
             </form>
-        </main>
+        </section>
     );
 }

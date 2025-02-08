@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 export default function SignUp() {
     const [username, setUsername] = useState("");
@@ -46,6 +47,9 @@ export default function SignUp() {
                     placeholder="Password" 
                     required 
                 />
+
+                <p>Already have an account? <Link href="/auth/signin" className="underline underline-offset-1">Sign In</Link></p>
+
                 <button type="submit" className="w-full bg-red text-white px-6 py-3 rounded-full">Sign Up</button>
             </form>
         </section>

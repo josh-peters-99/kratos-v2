@@ -7,7 +7,7 @@ export const caesar_dressing = Caesar_Dressing({
 
 export default function Footer() {
     return (
-        <footer className="w-full h-[300px] bg-grey flex flex-col px-8 py-3 justify-evenly items-start">
+        <footer className="w-full h-[300px] flex flex-col px-8 py-3 justify-evenly items-start">
 
             <div className="flex w-full items-center">
                 <h1 className={`${caesar_dressing.className} text-3xl text-auburn`}>KRATOS</h1>
@@ -15,7 +15,7 @@ export default function Footer() {
 
             <div className="flex flex-col w-full">
                 <p className="text-sm">Kratos protects your data.</p>
-                <p className="text-sm">Read more in our <span className="underline-offset-1">Privacy Policy</span></p>
+                <p className="text-sm">Read more in our <span className="underline underline-offset-1">Privacy Policy</span></p>
             </div>
 
             <div className="flex gap-10 w-full">

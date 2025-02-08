@@ -60,6 +60,7 @@ export default function Navbar() {
                     <Link href="/about" onClick={toggleMenu} className="hover:text-auburn transition">About</Link>
                     <Link href="/services" onClick={toggleMenu} className="hover:text-auburn transition">Services</Link>
                     <Link href="/contact" onClick={toggleMenu} className="hover:text-auburn transition">Contact</Link>
+                    <Link href="/auth/signin" onClick={toggleMenu} className="bg-auburn rounded-md px-6 py-3">Sign In</Link>
                 </div>
             )}
         </nav>

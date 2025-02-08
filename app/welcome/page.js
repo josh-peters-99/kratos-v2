@@ -8,7 +8,7 @@ export default function Welcome() {
                 <div className="absolute inset-0 bg-black opacity-50"></div>
 
                 <div className="relative z-10 flex flex-col items-center text-center px-6 py-12 h-full justify-between">
-                    <h1 className="text-4xl text-white mt-32 font-bold">Need a way to track your strength training?</h1>
+                    <h1 className="text-4xl text-white mt-40 font-bold">Need a way to track your strength training?</h1>
 
                     
                     <div className="flex flex-col items-center">
