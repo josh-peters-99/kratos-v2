@@ -19,8 +19,7 @@ export default function SignIn() {
                     type="email" 
                     value={email} 
                     onChange={(e) => setEmail(e.target.value)} 
-                    placeholder="Email" 
-                    className="w-full h-10 rounded-md text-black px-3"
+                    placeholder="Email"
                     required 
                 />
                 <input 
@@ -28,7 +27,6 @@ export default function SignIn() {
                     value={password} 
                     onChange={(e) => setPassword(e.target.value)} 
                     placeholder="Password" 
-                    className="w-full h-10 rounded-md text-black px-3"
                     required
                 />
                 <button type="submit">Sign In</button>
