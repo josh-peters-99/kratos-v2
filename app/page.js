@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <div>
       <h1>Welcome, {session.user.username}!</h1>
-      <button onClick={() => signOut()}>Sign Out</button>
+      <button onClick={() => signOut()} className="w-full bg-red text-white px-6 py-3 rounded-full">Sign Out</button>
     </div>
   );
 }
