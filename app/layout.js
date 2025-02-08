@@ -1,6 +1,7 @@
 import "./globals.css";
 import { AuthProvider } from "./Provider";
 import { Roboto } from "next/font/google";
+import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 const roboto = Roboto({
@@ -18,7 +19,8 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`${roboto.className} no-scrollbar`}>
         <AuthProvider>
-          <main>{children}</main>
+          <Navbar />
+          <main className="pt-[84px]">{children}</main>
           <Footer />
         </AuthProvider>
       </body>

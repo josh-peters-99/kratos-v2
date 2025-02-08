@@ -12,5 +12,5 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
 }
 
 input {
-  @apply w-full rounded-md text-black h-10 px-3;
+  @apply w-full rounded-md text-black h-12 px-3 border;
 }
