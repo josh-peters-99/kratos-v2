@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Caesar_Dressing } from "next/font/google";
 import { useState } from "react";
+import { useSession, signOut } from "next-auth/react";
 
 
 export const caesar_dressing = Caesar_Dressing({
@@ -12,6 +13,7 @@ export const caesar_dressing = Caesar_Dressing({
 
 export default function Navbar() {
     const [menuOpen, setMenuOpen] = useState(false);
+    const { data: session } = useSession();
 
     // Toggle menu state
     const toggleMenu = () => {
@@ -60,7 +62,23 @@ export default function Navbar() {
                     <Link href="/about" onClick={toggleMenu} className="hover:text-auburn transition">About</Link>
                     <Link href="/services" onClick={toggleMenu} className="hover:text-auburn transition">Services</Link>
                     <Link href="/contact" onClick={toggleMenu} className="hover:text-auburn transition">Contact</Link>
-                    <Link href="/auth/signin" onClick={toggleMenu} className="bg-auburn rounded-md px-6 py-3">Sign In</Link>
+
+                    {session ? (
+                        // If user is signed in, show Sign Out button
+                        <button
+                            onClick={() => {
+                                signOut();
+                                toggleMenu();
+                            }}
+                            className="bg-auburn rounded-full px-6 py-3"
+                        >
+                            Sign Out
+                        </button>
+                    ) : (
+                        // If no user session, show Sign In link
+                        <Link href="/auth/signin" onClick={toggleMenu} className="bg-auburn rounded-md px-6 py-3">Sign In</Link>
+                    )}
+
                 </div>
             )}
         </nav>
