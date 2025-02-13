@@ -30,7 +30,7 @@ export default function Navbar() {
             {/* Logo */}
             <div className="h-full flex justify-center items-center z-50">
                 <img src="/black-logo.png" width={60} height={60} />
-                <h1 className="text-xl text-black ml-3">Company Name</h1>
+                <h1 className="text-xl text-black ml-3">Company Name Here</h1>
             </div>
 
             {/* Desktop Menu */}
