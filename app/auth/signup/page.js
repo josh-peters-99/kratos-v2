@@ -24,8 +24,8 @@ export default function SignUp() {
     };
 
     return (
-        <section className="w-full flex flex-col h-[800px] justify-center items-center px-10 bg-white">
-            <form onSubmit={handleSubmit} className="flex flex-col justify-between items-center w-full gap-8">
+        <section className="w-full flex flex-col h-[850px] md:h-screen justify-center items-center px-10 bg-white">
+            <form onSubmit={handleSubmit} className="flex flex-col justify-between items-center w-full gap-8 md:w-[500px]">
                 <input 
                     type="text" 
                     value={username} 
