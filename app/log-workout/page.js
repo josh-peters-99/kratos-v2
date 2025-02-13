@@ -1,7 +1,7 @@
 export default function addWorkout() {
     return (
-        <main>
+        <section>
             Workout
-        </main>
+        </section>
     )
 }
