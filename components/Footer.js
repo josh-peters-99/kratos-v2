@@ -1,14 +1,8 @@
 import { Caesar_Dressing } from "next/font/google";
-import { Metal_Mania } from "next/font/google";
 
 export const caesar_dressing = Caesar_Dressing({
     weight: ["400"],
     subsets: ["latin"],
-})
-
-export const metal_mania = Metal_Mania({
-    weight: ["400"],
-    substes: ["latin"],
 })
 
 export default function Footer() {
