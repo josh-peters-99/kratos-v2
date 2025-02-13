@@ -2,8 +2,6 @@
 
 import Link from "next/link";
 import { Caesar_Dressing } from "next/font/google";
-import { Skranji } from "next/font/google";
-import { Metal_Mania } from "next/font/google";
 import { useState } from "react";
 import { useSession, signOut } from "next-auth/react";
 
@@ -11,16 +9,6 @@ import { useSession, signOut } from "next-auth/react";
 export const caesar_dressing = Caesar_Dressing({
     weight: ["400"],
     subsets: ["latin"],
-})
-
-export const skranji = Skranji({
-    weight: ["400"],
-    substes: ["latin"],
-})
-
-export const metal_mania = Metal_Mania({
-    weight: ["400"],
-    substes: ["latin"],
 })
 
 export default function Navbar() {
@@ -42,7 +30,7 @@ export default function Navbar() {
             {/* Logo */}
             <div className="h-full flex justify-center items-center z-50">
                 <img src="/black-logo.png" width={60} height={60} />
-                <h1 className={`${metal_mania.className} text-xl text-black ml-3`}>Company Name</h1>
+                <h1 className="text-xl text-black ml-3">Company Name</h1>
             </div>
 
             {/* Desktop Menu */}
