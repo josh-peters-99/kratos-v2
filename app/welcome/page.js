@@ -15,7 +15,7 @@ export default function Welcome() {
                         <Link href="/auth/signup">
                             <button className="bg-auburn rounded-full px-12 py-6 font-medium text-xl text-white sm:px-8 sm:py-4 sm:text-base">Join Now</button>
                         </Link>
-                        <p className="text-sm text-white mt-4">Explore Company Name</p>
+                        <p className="text-sm text-white mt-4">Explore Kratos</p>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="w-6 h-6 text-white fill-current mt-8">
                             <path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/>
                         </svg>

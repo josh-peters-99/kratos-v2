@@ -7,15 +7,15 @@ export const caesar_dressing = Caesar_Dressing({
 
 export default function Footer() {
     return (
-        <footer className="w-full h-[300px] flex flex-col px-8 py-3 items-center justify-evenly">
+        <footer className="w-full h-[300px] flex flex-col px-8 py-3 items-center justify-evenly bg-white">
 
             <div className="flex w-full items-center justify-center">
-                <img src="/black-logo.png"  width={75} height={75}/>
+                <img src="/v3-white-logo.png"  width={75} height={75}/>
                 {/* <h1 className={`${metal_mania.className} text-xl text-black`}>Company Name</h1> */}
             </div>
 
             <div className="flex flex-col w-full items-center">
-                <p className="text-sm">Company Name protects your data.</p>
+                <p className="text-sm">Kratos protects your data.</p>
                 <p className="text-sm">Read more in our <span className="underline underline-offset-1">Privacy Policy</span></p>
             </div>
 
@@ -35,7 +35,7 @@ export default function Footer() {
             </div>
 
             <div>
-                <p className="text-sm">{String.fromCharCode(169)} 2025 Company Name. All rights reserved.</p>
+                <p className="text-sm">{String.fromCharCode(169)} 2025 Kratos. All rights reserved.</p>
             </div>
             
         </footer>
