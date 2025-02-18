@@ -2,7 +2,10 @@
 
 import { useState, useEffect } from "react"
 import { v4 as uuidv4 } from "uuid"
+import { useRouter } from "next/navigation";
+
 import Exercise from "@/components/Exercise";
+import DiscardWorkoutButton from "@/components/DiscardWorkoutButton";
 
 export default function logWorkout() {
     const [maxDate, setMaxDate] = useState("");
@@ -110,6 +113,25 @@ export default function logWorkout() {
         }
     }
 
+    const discardWorkout = async (workoutId) => {
+        const router = useRouter();
+
+        try {
+            const response = await fetch(`/api/workout/${workoutId}`, {
+                method: "DELETE",
+            });
+    
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.error || "Failed to discard workout");
+    
+            console.log("Workout discarded successfully");
+            // Redirect to the home page
+            router.push("/");
+        } catch (error) {
+            console.error("Error discarding workout:", error);
+        }
+    };
+
     // Update workout details with debounce to prevent excessive API calls
     const debounceUpdate = (field, value) => {
         if (isNewWorkout) return; // Skip updating if it's a new workout
@@ -213,6 +235,9 @@ export default function logWorkout() {
                         <button type="submit" className="bg-black text-white font-bold px-6 py-3 rounded-md">Finish Workout</button>
                     </div>
                 </form>
+
+                <DiscardWorkoutButton workoutId={workoutId} />
+
             </div>
 
         </section>
