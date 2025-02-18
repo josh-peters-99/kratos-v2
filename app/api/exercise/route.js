@@ -7,15 +7,21 @@ export async function GET(req) {
         await connectDB();
         const { searchParams } = new URL(req.url);
         const exerciseId = searchParams.get("exerciseId");
+        const workoutId = searchParams.get("workoutId");
 
-        const exercise = await Exercise.findOne({ exerciseId });
-
-        if (exercise) {
-            return NextResponse.json({ exists: true, exercise }, { status: 200 });
+        if (exerciseId) {
+            // Fetch a single exercise by exerciseId
+            const exercise = await Exercise.findOne({ exerciseId });
+            return NextResponse.json({ exists: !!exercise, exercise }, { status: 200 });
+        } else if (workoutId) {
+            // Fetch all exercises associated with a workoutId
+            const exercises = await Exercise.find({ workoutId });
+            return NextResponse.json({ exists: exercises.length > 0, exercises }, { status: 200 });
         } else {
-            return NextResponse.json({ exists: false }, { status: 200 });
+            return NextResponse.json({ error: "Missing query parameter (exerciseId or workoutId required" }, { status: 400 });
         }
     } catch (error) {
+        console.error("Error fetching exercise(s):", error);
         return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
 }
@@ -23,14 +29,14 @@ export async function GET(req) {
 export async function POST(req) {
     try {
         await connectDB();
-        const { id, name = "", sets = [] } = await req.json();
+        const { workoutId, exerciseId, name = "", sets = [] } = await req.json();
 
-        const exisitingExercise = await Exercise.findOne({ id });
+        const exisitingExercise = await Exercise.findOne({ exerciseId });
         if (exisitingExercise) {
             return NextResponse.json({ error: "A exercise with that id already exists" }, { status: 400 });
         }
 
-        await Exercise.create({ id, name, sets });
+        await Exercise.create({ workoutId, exerciseId, name, sets });
 
         return NextResponse.json({ message: "Exercise saved successfully" }, { status: 201 });
     } catch (error) {
@@ -42,9 +48,9 @@ export async function POST(req) {
 export async function PATCH(req) {
     try {
         await connectDB();
-        const { id, ...updates } = await req.json();
+        const { exerciseId, ...updates } = await req.json();
 
-        const exercise = await Exercise.findOneAndUpdate({ id }, updates, { new: true });
+        const exercise = await Exercise.findOneAndUpdate({ exerciseId }, updates, { new: true });
 
         if (!exercise) {
             return NextResponse.json({ error: "Exercise not found" }, { status: 404 });

@@ -1,19 +1,34 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 
-export default function Exercise() {
+export default function Exercise({ exerciseNum, workoutId, exerciseId }) {
     const [isOpen, setIsOpen] = useState(false);
+    const [exerciseName, setExerciseName] = useState("");
 
     // Toggle isOpen state when clicked
     const toggleOpen = () => {
         setIsOpen(!isOpen);
     }
 
+    const updateExercise = async () => {
+        try {
+            const response = await fetch("/api/exercise", {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ exerciseId, name: exerciseName }),
+            });
+
+            if (!response.ok) throw new Error("Failed to update exercise");
+        } catch (error) {
+            console.error("Error updating exercise:", error);
+        }
+    };
+
     return (
         <div className="bg-red rounded-md p-3 shadow-md">
             <div onClick={toggleOpen} className="flex items-center justify-between">
-                <label className="text-white font-bold">Exercise 1</label>
+                <label className="text-white font-bold">Exercise {exerciseNum}</label>
 
                 {isOpen ? (
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" className="w-7 h-7 fill-current text-white hover:cursor-pointer">
@@ -29,7 +44,9 @@ export default function Exercise() {
             {isOpen && (
                 <input 
                     type="text"
-                    id="exercise"
+                    value={exerciseName}
+                    onChange={(e) => setExerciseName(e.target.value)}
+                    onBlur={updateExercise}
                     placeholder="Exercise Name"
                     required
                 />

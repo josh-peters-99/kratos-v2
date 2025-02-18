@@ -43,6 +43,10 @@ export const authOptions = {
             if (session.user) {
                 session.user.id = token.id;
                 session.user.username = token.username;
+
+                // Fetch latest workouts from DB
+                const user = await User.findById(token.id);
+                session.user.workouts = user ? user.workouts : [];
             }
             return session;
         }

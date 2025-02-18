@@ -23,7 +23,7 @@ export async function GET(req) {
 export async function POST(req) {
     try {
         await connectDB();
-        const { id, title = "", date, exercises = [], notes = "" } = await req.json();
+        const { id, title = "", date, notes = "" } = await req.json();
 
         const existingWorkout = await Workout.findOne({ id });
         if (existingWorkout) {
@@ -34,7 +34,6 @@ export async function POST(req) {
             id, 
             title, 
             date: date ? new Date(date) : new Date(), // Default to today's date if missing
-            exercises, 
             notes 
         });
 

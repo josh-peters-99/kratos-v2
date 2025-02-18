@@ -9,36 +9,34 @@ export default function logWorkout() {
     const [workoutId, setWorkoutId] = useState(null);
     const [workoutTitle, setWorkoutTitle] = useState("");
     const [workoutDate, setWorkoutDate] = useState("");
-    const [exercises, setExercises] = useState([]);
     const [notes, setNotes] = useState("");
     const [isNewWorkout, setIsNewWorkout] = useState(true);
+    const [exercises, setExercise] = useState([]);
 
-    // Persist workoutId to avoid re-creating on page reload
+    // WORKOUT METHODS
+    // Set workoutId from localStorage or create a new one if not found
     useEffect(() => {
-        let storedWorkoutId = localStorage.getItem("workoutId");
-        if (!storedWorkoutId) {
-            storedWorkoutId = uuidv4();
-            localStorage.setItem("workoutId", storedWorkoutId);
-        }
+        const storedWorkoutId = localStorage.getItem("workoutId") || uuidv4();
+        localStorage.setItem("workoutId", storedWorkoutId);
         setWorkoutId(storedWorkoutId);
     }, []);
 
-    // Once workoutId is set, check if the workout exists, else create it
+    // Check if the workout exists in the database when workoutId is set
     useEffect(() => {
         if (workoutId) {
             checkWorkoutExists();
+            fetchExercises(); // Fetch exercises when workoutId is set
         }
     }, [workoutId]);
 
-    // Setup calendar so that user can't select future dates
+    // Set maxDate to prevent future dates from being selected
     useEffect(() => {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-        const localDate = today.toISOString().split("T")[0];
-        setMaxDate(localDate);
+        setMaxDate(today.toISOString().split("T")[0]);
     }, []);
 
-    // Function to check if the workout exists
+    // Check if the workout exists and populate the form or create a new workout
     const checkWorkoutExists = async () => {
         try {
             const response = await fetch(`/api/log-workout?id=${workoutId}`);
@@ -48,39 +46,30 @@ export default function logWorkout() {
                 setIsNewWorkout(false);
                 setWorkoutTitle(data.workout.title);
                 setWorkoutDate(data.workout.date.split("T")[0]);
-                setExercises(data.workout.exercises);
                 setNotes(data.workout.notes);
             } else {
-                console.log("Workout does not exist. Creating new workout...");
-                await createWorkout(); // 🔥 Ensures a workout is created immediately
+                await createWorkout(); // Create the workout
+                await addWorkoutToUser(workoutId); // Add to user's workouts array
             }
         } catch (error) {
             console.error("Error checking workout existence:", error);
         }
     };
 
-    // Function to create a new workout
+    // Create a new workout in the database
     const createWorkout = async () => {
         try {
             const response = await fetch("/api/log-workout", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ 
                     id: workoutId, 
-                    title: "", // Can be omitted since default is empty string
                     date: new Date().toISOString().split("T")[0], 
-                    exercises: [], 
                     notes: "", 
                 }),
             });
 
-            if (!response.ok) {
-                throw new Error("Failed to create workout");
-            }
-
-            console.log("Workout sucessfully created!");
+            if (!response.ok) throw new Error("Failed to create workout");
             setIsNewWorkout(false); // Mark workout as existing
         } catch (error) {
             console.error("Error creating workout:", error);
@@ -92,9 +81,7 @@ export default function logWorkout() {
         try {
             const response = await fetch("/api/log-workout", {
                 method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ id: workoutId, ...updatedData }),
             });
 
@@ -106,42 +93,67 @@ export default function logWorkout() {
         }
     };
 
-    // Debounce updates to prevent excessive API calls
-    useEffect(() => {
-        if (!isNewWorkout) {
-            const debounceTimeout = setTimeout(() => {
-                updateWorkout({ title: workoutTitle });
-            }, 1000);
-            return () => clearTimeout(debounceTimeout);
-        }
-    }, [workoutTitle]);
+    const addWorkoutToUser = async (workoutId) => {
+        try {
+            const response = await fetch("/api/user/workout", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ workoutId }),
+            });
 
-    useEffect(() => {
-        if (!isNewWorkout) {
-            const debounceTimeout = setTimeout(() => {
-                updateWorkout({ date: workoutDate });
-            }, 1000);
-            return () => clearTimeout(debounceTimeout);
-        }
-    }, [workoutDate]);
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.error || "Failed to add workout");
 
-    useEffect(() => {
-        if (!isNewWorkout) {
-            const debounceTimeout = setTimeout(() => {
-                updateWorkout({ exercises });
-            }, 1000);
-            return () => clearTimeout(debounceTimeout);
+            console.log("Workout added:", data.workouts);
+        } catch (error) {
+            console.error("Error updating user workouts:", error);
         }
-    }, [exercises]);
+    }
 
-    useEffect(() => {
-        if (!isNewWorkout) {
-            const debounceTimeout = setTimeout(() => {
-                updateWorkout({ notes });
-            }, 1000);
-            return () => clearTimeout(debounceTimeout);
+    // Update workout details with debounce to prevent excessive API calls
+    const debounceUpdate = (field, value) => {
+        if (isNewWorkout) return; // Skip updating if it's a new workout
+        const debounceTimeout = setTimeout(() => {
+            updateWorkout({ [field]: value });
+        }, 1000);
+        return () => clearTimeout(debounceTimeout);
+    }
+
+    // Debounce updates for workoutTitle, workoutDate, and notes
+    useEffect(() => debounceUpdate("title", workoutTitle), [workoutTitle]);
+    useEffect(() => debounceUpdate("date", workoutDate), [workoutDate]);
+    useEffect(() => debounceUpdate("notes", notes), [notes]);
+
+    // EXERCISE METHODS
+    const fetchExercises = async () => {
+        try {
+            const response = await fetch(`api/exercise?workoutId=${workoutId}`);
+            const data = await response.json();
+            if (data.exists) setExercise(data.exercises);
+        } catch (error) {
+            console.error("Error fetching exercises:", error);
         }
-    }, [notes]);
+    };
+
+    const addExercise = async () => {
+        try {
+            const newExercise = {
+                workoutId,
+                exerciseId: uuidv4(),
+                name: "" // Default empty name
+            };
+            const response = await fetch("/api/exercise", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(newExercise),
+            });
+
+            if (!response.ok) throw new Error("Failed to add exercise");
+            fetchExercises(); // Fetch updated exercises list
+        } catch (error) {
+            console.error("Error adding exercise:", error);
+        }
+    };
 
     return (
         <section className="flex flex-col bg-white px-10 py-5 h-screen w-full items-center justify-center">
@@ -173,8 +185,19 @@ export default function logWorkout() {
                         />
                     </div>
 
-                    {/* Loop through exercises array and render the index + 1 */}
-                    <Exercise />
+                    {/* Display existing exercises */}
+                    {exercises.map((exercise, index) => (
+                        <Exercise 
+                            key={exercise.exerciseId}
+                            exerciseNum={index + 1}
+                            workoutId={exercise.workoutId}
+                            exerciseId={exercise.exerciseId}
+                        />
+                    ))}
+
+                    <div className="w-full flex items-center justify-center">
+                        <button type="button" onClick={addExercise} className="bg-black text-white px-6 py-3 rounded-md">Add Exercise</button>
+                    </div>
 
                     <div className="bg-red rounded-md p-3 shadow-md">
                         <label className="text-white font-bold">Notes</label>
@@ -183,12 +206,11 @@ export default function logWorkout() {
                             placeholder="How did it go?"
                             rows={4}
                             className="w-full rounded-md text-black p-3 border bg-white border-gray focus:border-auburn focus:ring-2 focus:ring-auburn outline-none"
-                        ></textarea> 
+                        ></textarea>
                     </div>
 
-
                     <div className="w-full flex items-center justify-center">
-                        <button type="submit" className="bg-black text-white px-6 py-3 rounded-md">Finish Workout</button>
+                        <button type="submit" className="bg-black text-white font-bold px-6 py-3 rounded-md">Finish Workout</button>
                     </div>
                 </form>
             </div>
